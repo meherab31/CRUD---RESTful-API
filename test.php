@@ -28,5 +28,43 @@
         } else {
             echo json_encode(array('message' => 'No products found.')); 
         }
+
     }
+
+    // Handling POST request to create a new product
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Get the JSON data from the request body
+        $json = file_get_contents('php://input'); //read the raw POST data sent from Postman
+        $data = json_decode($json, true); //decode the JSON data into an associative array ($data)
+
+        // Check if all required fields are present
+        if (!isset($data['id'], $data['title'], $data['description'], $data['image'], $data['quantity'], $data['category'], $data['price'])) {
+            echo json_encode(array('message' => 'All fields (id, title, description, image, quantity, category, price) are required.'));
+            http_response_code(400); // Bad request
+            exit();
+        }
+
+        // Collect data from JSON
+        $id = mysqli_real_escape_string($link, $data['id']);
+        $title = mysqli_real_escape_string($link, $data['title']);
+        $description = mysqli_real_escape_string($link, $data['description']);
+        $image = mysqli_real_escape_string($link, $data['image']);
+        $quantity = mysqli_real_escape_string($link, $data['quantity']);
+        $category = mysqli_real_escape_string($link, $data['category']);
+        $price = mysqli_real_escape_string($link, $data['price']);
+        $discount_price = isset($data['discount_price']) ? mysqli_real_escape_string($link, $data['discount_price']) : null;
+
+        // Insert into database
+        $sql = "INSERT INTO products (id, title, description, image, quantity, category, price, discount_price)
+                VALUES ('$id', '$title', '$description', '$image', '$quantity', '$category', '$price', '$discount_price')";
+
+        if (mysqli_query($link, $sql)) {
+            echo json_encode(array('message' => 'Product added successfully.'));
+            http_response_code(201); // Created
+        } else {
+            echo json_encode(array('message' => 'Error: Could not add product.' . mysqli_error($link)));
+            http_response_code(500); // Internal Server Error
+        }
+    }
+
 ?>

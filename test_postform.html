@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Post Form</title>
+</head>
+<body>
+    <h2>Add Product</h2>
+    <form id="productForm" method="post">
+
+        <label for="id">id:</label><br>
+        <input type="id" id="id" name="id"><br><br>
+
+        <label for="title">Title:</label><br>
+        <input type="text" id="title" name="title"><br><br>
+
+        <label for="description">Description:</label><br>
+        <textarea id="description" name="description" rows="4" cols="50"></textarea><br><br>
+
+        <label for="image">Image URL:</label><br>
+        <input type="text" id="image" name="image"><br><br>
+
+        <label for="quantity">Quantity:</label><br>
+        <input type="text" id="quantity" name="quantity"><br><br>
+
+        <label for="category">Category:</label><br>
+        <input type="text" id="category" name="category"><br><br>
+
+        <label for="price">Price:</label><br>
+        <input type="text" id="price" name="price"><br><br>
+
+        <label for="discount_price">Discount Price:</label><br>
+        <input type="text" id="discount_price" name="discount_price"><br><br>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <script>
+        document.getElementById("productForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+
+            // Create a JSON object from the form data
+            const formData = {
+                id: document.getElementById("id").value,
+                title: document.getElementById("title").value,
+                description: document.getElementById("description").value,
+                image: document.getElementById("image").value,
+                quantity: document.getElementById("quantity").value,
+                category: document.getElementById("category").value,
+                price: document.getElementById("price").value,
+                discount_price: document.getElementById("discount_price").value
+            };
+
+            // Send the JSON data to the server using Fetch API
+            fetch("test.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data); // Log the response from the server
+                alert(data.message); // Show a message to the user
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        });
+    </script>
+</body>
+</html>
