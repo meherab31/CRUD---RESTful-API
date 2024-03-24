@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: application/json');
 // Database connection parameters
 $host = "localhost"; 
 $username = "root"; 
