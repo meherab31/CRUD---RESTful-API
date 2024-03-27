@@ -31,6 +31,7 @@
 
     // }
 
+    
      //isset($_SERVER['REQUEST_METHOD']) setting the request method
     if(isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'GET'){ 
         // Check if ID parameter is provided in the URL
