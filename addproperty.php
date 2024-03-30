@@ -41,8 +41,8 @@
         $propertyDescription = mysqli_real_escape_string($link, $data['propertyDescription']);
         $price = mysqli_real_escape_string($link, $data['price']); 
         $areaSize = mysqli_real_escape_string($link, $data['areaSize']);
-        $bedrooms = mysqli_real_escape_string($link, $data['bedrooms']);
-        $bathrooms = mysqli_real_escape_string($link, $data['bathrooms']); 
+        $bedrooms = (int)mysqli_real_escape_string($link, $data['bedrooms']);
+        $bathrooms = (int)mysqli_real_escape_string($link, $data['bathrooms']); 
         $image  = mysqli_real_escape_string($link, $data['images']);
         $features = mysqli_real_escape_string($link, $data['features']);
 
