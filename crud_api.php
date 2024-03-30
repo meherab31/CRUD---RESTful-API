@@ -5,7 +5,7 @@
     $host = "localhost"; //domain name
     $username = "root"; //mysql username
     $password = ""; //password to login in mysql
-    $database = "testmmart"; //database name
+    $database = "testmart"; //database name
 
     //connect to mysql
     $link = mysqli_connect($host, $username, $password, $database);
