@@ -43,7 +43,7 @@
         $areaSize = mysqli_real_escape_string($link, $data['areaSize']);
         $bedrooms = (int)mysqli_real_escape_string($link, $data['bedrooms']);
         $bathrooms = (int)mysqli_real_escape_string($link, $data['bathrooms']); 
-        $image  = mysqli_real_escape_string($link, $data['images']);
+        $image  = mysqli_real_escape_string($link, $data['image']);
         $features = mysqli_real_escape_string($link, $data['features']);
 
         // SQL Insertion into Database
