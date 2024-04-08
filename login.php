@@ -45,7 +45,8 @@
                 if (password_verify($password, $hashed_password)) {
                     // Password matches
                     $token = $row['remember_token'];
-                    echo json_encode(array('message' => 'Login successful.', 'token' => $token));
+                    $id = $row['id'];
+                    echo json_encode(array('message' => 'Login successful.', 'token' => $token, 'id' => $id));
                     http_response_code(200); // OK
                 } else {
                     // Password does not match
