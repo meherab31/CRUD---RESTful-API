@@ -108,43 +108,58 @@
         }
      }
 
-     //Handling PUT request to update data
-    if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'PUT') {
+    // Handling PUT request to update data
+    if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         // Check if the request contains JSON data
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
 
         // Check if all required fields are present
-        if (!isset($data['id'], $data['title'], $data['description'], $data['image'], $data['quantity'], $data['category'], $data['price'])) {
-            echo json_encode(array('message' => 'All fields (id, title, description, image, quantity, category, price) are required.'));
+        if (!isset($data['id'])) {
+            echo json_encode(array('message' => 'User ID is required.'));
             http_response_code(400); // Bad request
             exit();
         }
 
-        // Collect PUT data first_name, last_name, description, gender, email, phone, password, dob, credits
+        // Collect PUT data
+        $id = mysqli_real_escape_string($link, $data['id']); // User ID
         $first_name = isset($data['first_name']) ? mysqli_real_escape_string($link, $data['first_name']) : null;
         $last_name = isset($data['last_name']) ? mysqli_real_escape_string($link, $data['last_name']) : null;
         $description = isset($data['description']) ? mysqli_real_escape_string($link, $data['description']) : null;
         $gender = isset($data['gender']) ? mysqli_real_escape_string($link, $data['gender']) : null;
         $phone = isset($data['phone']) ? mysqli_real_escape_string($link, $data['phone']) : null;
-        $dob = isset($data['dob']) ? mysqli_real_escape_string($link, $data['dob']) : null; // Date of birth
+        $dob = isset($data['dob']) ? mysqli_real_escape_string($link, $data['dob']) : null;
         $credits = isset($data['credits']) ? mysqli_real_escape_string($link, $data['credits']) : null;
+        $new_password = isset($data['new_password']) ? password_hash($data['new_password'], PASSWORD_DEFAULT) : null; // New Password
 
-        // Check if the id exists
+        // Check if the user with provided ID exists
         $check_query = "SELECT * FROM re_accounts WHERE id='$id'";
         $check_result = mysqli_query($link, $check_query);
 
         if (mysqli_num_rows($check_result) > 0) {
-            // Update the profile
-            $update_query = "UPDATE re_accounts SET first_name='$first_name', last_name='$last_name', description='$description', gender='$gender', phone='$phone', dob='$dob', credits='$credits' WHERE token='$token'";
+            // Construct the update query
+            $update_query = "UPDATE re_accounts SET ";
+            $fields = array();
+            if ($first_name !== null) $fields[] = "first_name='$first_name'";
+            if ($last_name !== null) $fields[] = "last_name='$last_name'";
+            if ($description !== null) $fields[] = "description='$description'";
+            if ($gender !== null) $fields[] = "gender='$gender'";
+            if ($phone !== null) $fields[] = "phone='$phone'";
+            if ($dob !== null) $fields[] = "dob='$dob'";
+            if ($credits !== null) $fields[] = "credits='$credits'";
+            if ($new_password !== null) $fields[] = "password='$new_password'";
+            $update_query .= implode(", ", $fields);
+            $update_query .= " WHERE id='$id'";
+            
+            // Execute the update query
             if (mysqli_query($link, $update_query)) {
-                echo json_encode(array('message' => 'profile updated successfully.'));
+                echo json_encode(array('message' => 'Profile updated successfully.'));
             } else {
                 echo json_encode(array('message' => 'Error: Could not update profile.' . mysqli_error($link)));
                 http_response_code(500); // Internal Server Error
             }
         } else {
-            echo json_encode(array('message' => 'profile with ID ' . $id . ' does not exist.'));
+            echo json_encode(array('message' => 'Profile with ID ' . $id . ' does not exist.'));
             http_response_code(404); // Not Found
         }
     }
