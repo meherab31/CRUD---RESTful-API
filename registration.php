@@ -22,28 +22,23 @@
 
         // Check if all required fields are present
         if (!isset($data['email'], $data['password'])) {
-            echo json_encode(array('message' => 'Email and password are required. |Fields -> first_name, last_name, description, gender, email, phone, password, dob, credits |'));
+            echo json_encode(array('message' => 'Email and password are required. |Fields -> first_name,email, phone, password, |'));
             http_response_code(400); // Bad request
             exit();
         }
 
         // Collect data from JSON
         $first_name = isset($data['first_name']) ? mysqli_real_escape_string($link, $data['first_name']) : null;
-        $last_name = isset($data['last_name']) ? mysqli_real_escape_string($link, $data['last_name']) : null;
-        $description = isset($data['description']) ? mysqli_real_escape_string($link, $data['description']) : null;
-        $gender = isset($data['gender']) ? mysqli_real_escape_string($link, $data['gender']) : null;
         $email = mysqli_real_escape_string($link, $data['email']);
         $phone = isset($data['phone']) ? mysqli_real_escape_string($link, $data['phone']) : null;
         $password = password_hash($data['password'], PASSWORD_DEFAULT); // Hash the password
-        $dob = isset($data['dob']) ? mysqli_real_escape_string($link, $data['dob']) : null; // Date of birth
-        $credits = isset($data['credits']) ? mysqli_real_escape_string($link, $data['credits']) : null;
 
         // Generate random token
         $token = bin2hex(random_bytes(32));
 
         // Insert into database
-        $sql = "INSERT INTO re_accounts (first_name, last_name, description, gender, email, phone, password, dob, credits, remember_token)
-                VALUES ('$first_name', '$last_name', '$description', '$gender', '$email', '$phone', '$password', '$dob', '$credits', '$token')";
+        $sql = "INSERT INTO re_accounts (first_name, email, phone, password,  remember_token)
+                VALUES ('$first_name', '$email', '$phone', '$password',  '$token')";
 
         if (mysqli_query($link, $sql)) {
             // Get the ID of the inserted record
