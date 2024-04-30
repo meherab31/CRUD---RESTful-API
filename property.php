@@ -39,11 +39,11 @@ if ($result = mysqli_query($link, $sql)) {
             }
 
             // Convert numeric keys to sequential keys
-            $row['10'] = json_decode($row['10'], true);
+            $row['15'] = json_decode($row['15'], true);
             $row['images'] = json_decode($row['images'], true);
 
             // Ensure arrays are not null
-            $row['10'] = is_array($row['10']) ? $row['10'] : [];
+            $row['16'] = is_array($row['15']) ? $row['15'] : [];
             $row['images'] = is_array($row['images']) ? $row['images'] : [];
 
             // Append each sanitized row to the $data array
